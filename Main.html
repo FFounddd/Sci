@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>House Glasswright - Personnel Assignment</title>
+
+<style>
+:root{
+  --bg:#0c0c12;
+  --panel:#14141c;
+  --accent:#7c6cff;
+  --danger:#b02323;
+  --text:#e6e6f2;
+  --muted:#8d8da6;
+  --paper:#f4f4f8;
+}
+
+body{
+  margin:0;
+  font-family: "Courier New", monospace;
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  gap:20px;
+  padding:20px;
+}
+
+.left{
+  width:360px;
+  background:var(--panel);
+  padding:15px;
+  border-radius:8px;
+  box-shadow:0 0 20px rgba(0,0,0,0.6);
+  overflow:auto;
+  max-height:95vh;
+}
+
+h2{
+  margin-top:0;
+  color:var(--accent);
+  letter-spacing:1px;
+}
+
+label{
+  display:block;
+  margin-top:12px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+input, textarea, select{
+  width:100%;
+  margin-top:6px;
+  padding:6px;
+  background:#1d1d26;
+  border:1px solid #2a2a36;
+  color:var(--text);
+  font-family:inherit;
+  font-size:13px;
+}
+
+textarea{
+  min-height:70px;
+  resize:vertical;
+}
+
+button{
+  margin-top:15px;
+  padding:8px;
+  width:100%;
+  background:var(--accent);
+  border:none;
+  color:black;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{
+  opacity:0.85;
+}
+
+.right{
+  flex:1;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+}
+
+.paper{
+  width:800px;
+  background:var(--paper);
+  color:black;
+  padding:30px;
+  border-radius:4px;
+  box-shadow:0 0 40px rgba(0,0,0,0.6);
+  font-family:Georgia, serif;
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  border-bottom:2px solid black;
+  padding-bottom:10px;
+}
+
+.logo{
+  font-weight:bold;
+  letter-spacing:2px;
+}
+
+.classified{
+  color:var(--danger);
+  font-weight:bold;
+}
+
+.section-title{
+  margin-top:20px;
+  font-weight:bold;
+  font-size:14px;
+  letter-spacing:1px;
+}
+
+.content{
+  white-space:pre-wrap;
+  word-wrap:break-word;
+  overflow-wrap:break-word;
+  margin-top:6px;
+  font-size:14px;
+  line-height:1.4;
+  max-width:100%;
+}
+
+.footer{
+  margin-top:30px;
+  font-size:12px;
+  color:#444;
+  border-top:1px solid #aaa;
+  padding-top:10px;
+}
+
+@page {
+  size: auto;
+  margin: 15mm;
+}
+
+@media print {
+
+  html, body {
+    height: auto !important;
+  }
+
+  body {
+    background: white !important;
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .left {
+    display: none !important;
+  }
+
+  .right {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .paper {
+    width: 100% !important;
+    max-width: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    page-break-after: always;
+  }
+
+  .section-title {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  .content {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    page-break-inside: auto;
+    break-inside: auto;
+  }
+
+}
+</style>
+</head>
+<body>
+
+<div class="left">
+  <h2>Black Site Assignment</h2>
+
+  <label>Scientist Name</label>
+  <input id="name" placeholder="Dr. Halvyr Tenn">
+
+  <label>Role / Division</label>
+  <input id="role" placeholder="Core Energy Researcher">
+
+  <label>Clearance Level</label>
+  <select id="clearance">
+    <option>Level I</option>
+    <option>Level II</option>
+    <option>Level III</option>
+    <option>Black Site Authority</option>
+  </select>
+
+  <label>Primary Skills</label>
+  <textarea id="skills" placeholder="Arcana +5, Investigation +4, Engineering Protocol"></textarea>
+
+  <label>Special Ability</label>
+  <textarea id="ability" placeholder="Once per session may override a sealed security door"></textarea>
+
+  <label>Equipment Loadout</label>
+  <textarea id="equipment" placeholder="Security keycard, data slate, stabilization injector"></textarea>
+
+  <label>Assigned Objective</label>
+  <textarea id="objective" placeholder="Reach Core Chamber and initiate failsafe shutdown"></textarea>
+
+  <label>Survival Directive</label>
+  <textarea id="directive" placeholder="Preserve data integrity at all costs"></textarea>
+
+  <button onclick="generate()">Generate Assignment Sheet</button>
+  <button onclick="window.print()">Print / Save PDF</button>
+</div>
+
+<div class="right">
+  <div class="paper" id="output">
+    <div class="header">
+      <div class="logo">HOUSE GLASSWRIGHT<br>BLACK SITE PERSONNEL ASSIGNMENT</div>
+      <div class="classified">STRICTLY CONFIDENTIAL</div>
+    </div>
+
+    <div class="section-title">IDENTIFICATION</div>
+    <div class="content" id="outName">-</div>
+
+    <div class="section-title">ROLE / DIVISION</div>
+    <div class="content" id="outRole">-</div>
+
+    <div class="section-title">CLEARANCE LEVEL</div>
+    <div class="content" id="outClearance">-</div>
+
+    <div class="section-title">PRIMARY SKILLS</div>
+    <div class="content" id="outSkills">-</div>
+
+    <div class="section-title">SPECIAL ABILITY</div>
+    <div class="content" id="outAbility">-</div>
+
+    <div class="section-title">EQUIPMENT ISSUED</div>
+    <div class="content" id="outEquipment">-</div>
+
+    <div class="section-title">ASSIGNED OBJECTIVE</div>
+    <div class="content" id="outObjective">-</div>
+
+    <div class="section-title">SURVIVAL DIRECTIVE</div>
+    <div class="content" id="outDirective">-</div>
+
+    <div class="footer">
+      Document ID: GS-BLACKSITE-ACTIVE<br>
+      Executive Authorization Required<br>
+      Property of House Glasswright - Failure to comply is punishable.
+    </div>
+  </div>
+</div>
+
+<script>
+function generate(){
+  document.getElementById("outName").textContent = document.getElementById("name").value || "-";
+  document.getElementById("outRole").textContent = document.getElementById("role").value || "-";
+  document.getElementById("outClearance").textContent = document.getElementById("clearance").value || "-";
+  document.getElementById("outSkills").textContent = document.getElementById("skills").value || "-";
+  document.getElementById("outAbility").textContent = document.getElementById("ability").value || "-";
+  document.getElementById("outEquipment").textContent = document.getElementById("equipment").value || "-";
+  document.getElementById("outObjective").textContent = document.getElementById("objective").value || "-";
+  document.getElementById("outDirective").textContent = document.getElementById("directive").value || "-";
+}
+</script>
+
+</body>
+</html>
